@@ -11,7 +11,6 @@ import sys
 from shutil import rmtree
 
 from decouple import config
-from .github import Repo
 
 from .. import *
 from ..dB._core import HELP
