@@ -1,16 +1,11 @@
-# Ultroid - UserBot
-# Copyright (C) 2021-2023 TeamUltroid
-#
-# This file is a part of < https://github.com/TeamUltroid/Ultroid/ >
-# PLease read the GNU Affero General Public License in
-# <https://github.com/TeamUltroid/pyUltroid/blob/main/LICENSE>.
-
 import os
 import subprocess
 import sys
 from shutil import rmtree
 
 from decouple import config
+from git import Repo
+from telethon import TelegramClient
 
 from .. import *
 from ..dB._core import HELP
@@ -71,8 +66,10 @@ def load_other_plugins(addons=None, pmbot=None, manager=None, vcbot=None):
         if os.path.exists("addons") and not os.path.exists("addons/.git"):
             rmtree("addons")
         if not os.path.exists("addons"):
+            repo = Repo()
+            active_branch = repo.active_branch.name
             subprocess.run(
-                f"git clone -q -b {Repo().active_branch} https://github.com/TeamUltroid/UltroidAddons.git addons",
+                f"git clone -q -b {active_branch} https://github.com/TeamUltroid/UltroidAddons.git addons",
                 shell=True,
             )
         else:
@@ -84,10 +81,6 @@ def load_other_plugins(addons=None, pmbot=None, manager=None, vcbot=None):
                 shell=True,
             )
         if os.path.exists("addons/addons.txt"):
-            # generally addons req already there so it won't take much time
-            # subprocess.run(
-            #        "rm -rf /usr/local/lib/python3.*/site-packages/pip/_vendor/.wh*"
-            #    )
             subprocess.run(
                 f"{sys.executable} -m pip install --no-cache-dir -q -r ./addons/addons.txt",
                 shell=True,
